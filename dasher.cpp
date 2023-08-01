@@ -21,6 +21,10 @@ int main(){
 
     int velosity = 0;
 
+    int frame = 0;
+    float updateTime = 1.0 / 12.0;
+    float runningTime = 0.0;
+
     SetTargetFPS(60);
 
     while(!WindowShouldClose()){
@@ -29,6 +33,7 @@ int main(){
         ClearBackground(WHITE);
 
         float dt = GetFrameTime();
+        runningTime += dt;
 
         if(scarfyPos.y >= windowHeight - scarfyRec.height){
             velosity = 0;
@@ -40,6 +45,16 @@ int main(){
         }
 
         scarfyPos.y += velosity * dt;
+        
+        if(runningTime >= updateTime){
+            runningTime = 0.0;
+            scarfyRec.x = frame * scarfyRec.width;
+            frame++;
+            if(frame > 5){
+                frame = 0;
+            }
+        }
+        
 
         DrawTextureRec(scarfy, scarfyRec, scarfyPos, WHITE);
 
