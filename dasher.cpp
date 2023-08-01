@@ -4,16 +4,21 @@ int main(){
     const int windowWidth = 512;
     const int windowHeight = 380;
 
-
     InitWindow(windowWidth, windowHeight, "Dapper Dasher");
 
     const int gravity = 1;
     const int jumpVal = -22;
 
-    const int width = 50;
-    const int height = 80;
+    Texture2D scarfy = LoadTexture("textures/scarfy.png");
+    Rectangle scarfyRec;
+    scarfyRec.width = scarfy.width / 6;
+    scarfyRec.height = scarfy.height;
+    scarfyRec.x = 0;
+    scarfyRec.y = 0;
+    Vector2 scarfyPos;
+    scarfyPos.x = windowWidth / 2 - scarfyRec.width / 2;
+    scarfyPos.y = windowHeight - scarfyRec.height;
 
-    int posY = windowHeight - height;
     int velosity = 0;
 
     SetTargetFPS(60);
@@ -23,7 +28,7 @@ int main(){
         BeginDrawing();
         ClearBackground(WHITE);
 
-        if(posY >= windowHeight - height){
+        if(scarfyPos.y >= windowHeight - scarfyRec.height){
             velosity = 0;
             if(IsKeyPressed(KEY_SPACE)){
                 velosity += jumpVal;
@@ -32,11 +37,12 @@ int main(){
             velosity += gravity;
         }
 
-        posY += velosity;
+        scarfyPos.y += velosity;
 
-        DrawRectangle(windowWidth / 2, posY, width, height, BLUE);
+        DrawTextureRec(scarfy, scarfyRec, scarfyPos, WHITE);
 
         EndDrawing();
     }
+    UnloadTexture(scarfy);
     CloseWindow();
 }
