@@ -1,17 +1,20 @@
 #include <raylib.h>
 
 int main(){
-    const int width = 512;
-    const int height = 380;
+    const int windowWidth = 512;
+    const int windowHeight = 380;
+
+    InitWindow(windowWidth, windowHeight, "Dapper Dasher");
 
     SetTargetFPS(60);
-
-    InitWindow(width, height, "Dasher");
 
     while(!WindowShouldClose()){
 
         BeginDrawing();
         ClearBackground(WHITE);
+
+
         EndDrawing();
     }
+    CloseWindow();
 }
