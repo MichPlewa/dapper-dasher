@@ -33,23 +33,22 @@ int main(){
     scarfyData.runningtime = 0.0;
 
     Texture2D nebula = LoadTexture("textures/12_nebula_spritesheet.png");
-    AnimData nebulaData{
-        {0.0, 0.0, nebula.width/8.f, nebula.height/8.f}, 
-        {windowDimensions[0], windowDimensions[1] - nebulaData.rec.height}, 
-        0,
-        1.0/12.0, 
-        0.0
-    };
 
-    AnimData nebula2Data{
-        {0.0, 0.0, nebula.width/8.f, nebula.height/8.f}, 
-        {windowDimensions[0] + 300, windowDimensions[1] - nebulaData.rec.height}, 
-        0, 
-        1.0/16, 
-        0.0
-    };
+    AnimData nebulae[3]{};
 
-    AnimData nebulae[2]{ nebulaData, nebula2Data };
+    for(int i = 0; i < 3; i++){
+        nebulae[i].rec.x = 0.0;
+        nebulae[i].rec.y = 0.0;
+        nebulae[i].rec.width = nebula.width/8;
+        nebulae[i].rec.height = nebula.height/8.f;
+        nebulae[i].pos.y = windowDimensions[1] - nebula.height;
+        nebulae[i].frame = 0;
+        nebulae[i].runningtime = 1.0/16.0;
+        nebulae[i].updateTime = 0.0;
+    }
+    nebulae[0].pos.x = windowDimensions[0];
+    nebulae[1].pos.x = windowDimensions[0] + 300;
+    nebulae[3].pos.x = windowDimensions[0] + 600;
 
     int nebulaVel = -200;
     int velosity = 0;
