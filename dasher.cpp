@@ -9,10 +9,12 @@ struct AnimData{
 };
 
 int main(){
-    const int windowWidth = 512;
-    const int windowHeight = 380;
 
-    InitWindow(windowWidth, windowHeight, "Dapper Dasher");
+    int windowDimensions[2];
+    windowDimensions[0] = 512;
+    windowDimensions[1] = 380;
+
+    InitWindow(windowDimensions[0], windowDimensions[1], "Dapper Dasher");
 
     const int gravity = 1000;
     const int jumpVal = -600;
@@ -24,8 +26,8 @@ int main(){
     scarfyData.rec.height = scarfy.height;
     scarfyData.rec.x = 0;
     scarfyData.rec.y = 0;
-    scarfyData.pos.x = windowWidth / 2 - scarfyData.rec.width / 2;
-    scarfyData.pos.y = windowHeight - scarfyData.rec.height;
+    scarfyData.pos.x = windowDimensions[0] / 2 - scarfyData.rec.width / 2;
+    scarfyData.pos.y = windowDimensions[1] - scarfyData.rec.height;
     scarfyData.frame = 0;
     scarfyData.updateTime = 1.0/12.0;
     scarfyData.runningtime = 0.0;
@@ -33,7 +35,7 @@ int main(){
     Texture2D nebula = LoadTexture("textures/12_nebula_spritesheet.png");
     AnimData nebulaData{
         {0.0, 0.0, nebula.width/8.f, nebula.height/8.f}, 
-        {windowWidth, windowHeight - nebulaData.rec.height}, 
+        {windowDimensions[0], windowDimensions[1] - nebulaData.rec.height}, 
         0,
         1.0/12.0, 
         0.0
@@ -41,11 +43,13 @@ int main(){
 
     AnimData nebula2Data{
         {0.0, 0.0, nebula.width/8.f, nebula.height/8.f}, 
-        {windowWidth + 300, windowHeight - nebulaData.rec.height}, 
+        {windowDimensions[0] + 300, windowDimensions[1] - nebulaData.rec.height}, 
         0, 
         1.0/16, 
         0.0
     };
+
+    AnimData nebulae[2]{ nebulaData, nebula2Data };
 
     int nebulaVel = -200;
     int velosity = 0;
@@ -61,10 +65,10 @@ int main(){
 
         scarfyData.runningtime += dt;
 
-        nebulaData.runningtime += dt;
-        nebula2Data.runningtime += dt;
+        nebulae[0].runningtime += dt;
+        nebulae[1].runningtime += dt;
 
-        if(scarfyData.pos.y >= windowHeight - scarfyData.rec.height){
+        if(scarfyData.pos.y >= windowDimensions[1] - scarfyData.rec.height){
             velosity = 0;
             isInAir = false;
             if(IsKeyPressed(KEY_SPACE)){
@@ -75,25 +79,25 @@ int main(){
             velosity += gravity * dt;
         }
 
-        nebulaData.pos.x += nebulaVel * dt;
+        nebulae[0].pos.x += nebulaVel * dt;
 
-        if(nebulaData.runningtime >= nebulaData.updateTime){
-            nebulaData.runningtime = 0.0;
-            nebulaData.rec.x = nebulaData.frame * nebulaData.rec.width;
-            nebulaData.frame++;
-            if(nebulaData.frame > 7){
-                nebulaData.frame = 0;
+        if(nebulae[0].runningtime >= nebulae[0].updateTime){
+            nebulae[0].runningtime = 0.0;
+            nebulae[0].rec.x = nebulae[0].frame * nebulae[0].rec.width;
+            nebulae[0].frame++;
+            if(nebulae[0].frame > 7){
+                nebulae[0].frame = 0;
             }
         }
 
-        nebula2Data.pos.x += nebulaVel * dt;
+        nebulae[1].pos.x += nebulaVel * dt;
 
-        if(nebula2Data.runningtime >= nebula2Data.updateTime){
-            nebula2Data.runningtime = 0.0;
-            nebula2Data.rec.x = nebula2Data.frame * nebula2Data.rec.width;
-            nebula2Data.frame++;
-            if(nebula2Data.frame > 7){
-                nebula2Data.frame = 0;
+        if(nebulae[1].runningtime >= nebulae[1].updateTime){
+            nebulae[1].runningtime = 0.0;
+            nebulae[1].rec.x = nebulae[1].frame * nebulae[1].rec.width;
+            nebulae[1].frame++;
+            if(nebulae[1].frame > 7){
+                nebulae[1].frame = 0;
             }
         }
 
@@ -108,12 +112,13 @@ int main(){
             }
         }
         
-        DrawTextureRec(nebula, nebulaData.rec, nebulaData.pos, WHITE);
-        DrawTextureRec(nebula, nebula2Data.rec, nebula2Data.pos, RED);
+        DrawTextureRec(nebula, nebulae[0].rec, nebulae[0].pos, WHITE);
+        DrawTextureRec(nebula, nebulae[1].rec, nebulae[1].pos, RED);
         DrawTextureRec(scarfy, scarfyData.rec, scarfyData.pos, WHITE);
 
         EndDrawing();
     }
+    
 
     UnloadTexture(nebula);
     UnloadTexture(scarfy);
